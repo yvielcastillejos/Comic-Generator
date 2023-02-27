@@ -1,0 +1,67 @@
+<!doctype html>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<html>
+
+
+	<head>
+		<title> Comic Generator </title>
+		<link rel="stylesheet" type="text/css" href=main.css>
+	</head>
+
+	<body> 
+		<h1> Comic Generator</h1>
+		<header>
+		<nav>
+		<ul2>
+		    <form action="#" method="post">
+			<input type="text" name="gpt3" />
+			<input type="submit" value="submit" />
+		    </form>
+		</ul2>
+		<ul>
+        		<button> Click to lock Frame 1</button>
+			<button> Click to lock Frame 2 </button>
+			<button> Click to lock Frame 3 </button>
+		</ul>
+		
+		</nav>
+		</header>
+
+		<div class = "row">
+			<div class = "col" id="col1" > Frame 1 </div>
+                        <img id="image" src="/static/strips/1.png" style="display:none"
+                         height=300 width=300;>
+			<div class = "col" id="col2"> Frame 2 </div>
+			<div class = "col" id="col3"> Frame 3 </div>
+                        <img height=50 width=50 id="image2" src="/static/strips/2.png" style="display:none">
+                        <img id="image3" src="/static/strips/3.png" alt="GFG image" style="display:none" height=50 width=50;>
+		</div>
+
+		                <ulli>
+                
+                        <button onclick="show()" type="button" id="btnID" >Generate Comic Strip</button>
+
+</ulli>	
+
+
+    <script>
+                  function show() {
+  
+                   /* Access image by id and change
+                    the display property to block*/
+                    document.getElementById('image').style.display =  "block"; 
+                    document.getElementById('image2').style.display =  "block";
+                    document.getElementById('image3').style.display =  "block";
+                    document.getElementById('col1').style.display =  "none";
+                    document.getElementById('col2').style.display =  "none";
+                    document.getElementById('col3').style.display =  "none"; 
+        }
+    </script>
+
+
+	</body>
+</html>
+

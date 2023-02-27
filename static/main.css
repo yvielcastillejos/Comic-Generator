@@ -1,0 +1,99 @@
+body{
+	margin: 0;
+	background: lightgray;
+	color: black;
+	font-family: Helvetica;
+}
+
+body h1{
+	padding: 0px 500px;
+}
+
+nav ul2{
+        display: inline-block;
+        list-style-type: none;
+        display: inline-block;
+        list-style-type: none;
+        padding: 0px 520px;
+        margin: 0px 0px;
+}
+
+
+nav ul2{
+	display: inline-block;
+	list-style-type: none;
+        display: inline-block;
+	list-style-type: none;
+	padding: 5px 30px;
+	margin: 0px 105px;
+}
+
+nav ulli {
+        display: inline-block;
+        list-style-type: none;
+        display: inline-block;
+        list-style-type: none;
+        padding: 5px 30px;
+        margin: 0px 105px;
+        font-size: 5;
+}
+input[type="text"] {
+  width: 50%;
+  padding: 10px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: none;
+  box-shadow: 1px 1px 5px lightgray;
+}
+
+input[type="submit"] {
+  padding: 5px 10px;
+  background-color: darkblue;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+
+input[type="button"]{
+  padding: 5px 10px;
+  background-color: darkblue;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+ulli{ 
+        display: inline-block;
+        list-style-type: none;
+        display: inline-block;
+        list-style-type: none;
+        padding: 25px 50px;
+        margin: 0px 40px;
+}
+
+.row{
+
+}
+
+.col {
+       
+	float: left;
+	color: #000;
+	background: #FFF;
+	padding: 130px;
+	margin: 40px;
+}
+
+.col2 {
+        float: left;
+        color: #000;
+        background: #FFF;
+        margin: 40px;
+}
+

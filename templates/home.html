@@ -1,0 +1,85 @@
+<!doctype html>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.8/socket.io.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+<html>
+
+
+	<head>
+		<title> Comic Generator </title>
+		<link rel="stylesheet" type="text/css" href={{ url_for("static", filename="main.css")}}>
+	</head>
+
+	<body> 
+		<h1> Comic Generator</h1>
+		<header>
+		<nav>
+		<ul2>
+		    <form action="#" method="post">
+		    
+		</ul2>
+		<ul> 
+                        <input type="submit" name="action1" value="Click to get next image for strip 1" />  
+        		<input type="submit" name="action2" value="Click to get next image for strip 2" />
+                        <input type="submit" name="action3" value="Click to get next image for strip 3" />
+
+		</ul>
+                </form>
+		
+		</nav>
+		</header>
+
+		<div class = "row">
+                        <img id="image" class="col2" src={{img1}} style="display:block"
+                         height=300 width=300;>
+                        <img height=300 width=300 class="col2" id="image2" src={{img2}} style="display:block">
+                        <img class = "col2"  id="image3" src={{img3}} alt="GFG image" style="display:block" height=300 width=300;>
+		</div>
+
+                <h3> {{message1}} </h3>
+                <h3> {{message2}} </h3>
+                <h3> {{message3}} </h3>
+
+		                <ulli>
+                
+                    <!--   <input onclick="show()" type="submit" id="1" value="Generate Comic Strip"/> -->
+
+</ulli>	
+
+
+    <script>
+
+	  // Define a variable to hold the count
+	  let count = 0;
+
+			// Define a function that increments the count and displays it
+	  function handleClick1() {
+		  count=(count+1)%4;
+                  document.getElementById('image').src = "/static/strips_2/3.jpg"; // + count.toString() + ".jpg"
+		  window.alert("/static/strips_2/" + count.toString() + ".jpg");
+
+                }
+
+		// Get a reference to the button element
+		const button = document.querySelector('button');
+
+		// Add a click event listener to the button
+		button.addEventListener('click', handleClick);
+		
+           function show() {
+                   /* Access image by id and change
+                    the display property to block*/
+                    document.getElementById('image').style.display =  "block"; 
+                    document.getElementById('image2').style.display =  "block";
+                    document.getElementById('image3').style.display =  "block";
+                    document.getElementById('col1').style.display =  "none";
+                    document.getElementById('col2').style.display =  "none";
+                    document.getElementById('col3').style.display =  "none"; 
+        }
+    </script>
+
+
+	</body>
+</html>
+

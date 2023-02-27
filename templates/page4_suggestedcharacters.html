@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href={{ url_for("static", filename="page3.css")}}>
+    <title>Ideas</title>
+  </head>
+  <body>
+    <h1>Here are some character ideas for you:</h1>
+    <h2>Your story is:</h2>
+    <h3>{{story}}</h3>
+
+    <ul>
+      <form method="post" action="#">
+       <li><input type="submit" name="1" value="choose:" class="btn-link"><a>    {{message}} </a></input></li>
+       <li><input type="submit" name="3" value="choose:" class="btn-link"><a>    {{message1}} </a></input></li>
+       <li><input type="submit" name="5" value="choose:" class="btn-link"><a>    {{message2}} </a></input></li>
+       <li><input type="submit" name="7" value="choose:" class="btn-link"><a>    {{message3}} </a></input></li>
+       <li><input type="submit" name="9" value="choose:" class="btn-link"><a>    {{message4}} </a></input></li> 
+     </form> 
+    </ul>
+  </body>
+</html>
