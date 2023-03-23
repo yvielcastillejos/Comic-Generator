@@ -145,7 +145,7 @@ def get_chatgpt(prompt, charname, chardesc):
     Character1_description = chardesc  #"a 10 year old boy who is learning how to ride a bicycle for the first time."
 
     text = f"Generate a story of '{prompt}' with Dialogue. The story SHOULD only contain one character talking to himself/herself and the Dialogue SHOULD only contain 3 lines of dialogue.\n CHARACTERS: {Character1_name}: {Character1_description}\n SCENE:"
-    api = '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' #'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'
+    api = os.environ.get('API_KEY') #'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' #'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'
     openai.api_key = api #os.getenv(api)
 
     response = openai.Completion.create(
