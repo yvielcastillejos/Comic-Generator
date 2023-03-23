@@ -26,7 +26,7 @@ The comic generator uses GPT-3 to generate a storyline based on a given prompt. 
 ## Model Library 
 | Model | Link|
 |:--:|:--:|
-|Character 1 | |
+|Character 1 (Party Girl) | https://drive.google.com/drive/folders/1--Gbk15DRwHeuB5OCLIuA5xnPA4eiJ4k  |
 |Character 2 | |
 
 ## Getting Started
