@@ -18,7 +18,7 @@ import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline, DDIMScheduler
 from IPython.display import display
-
+from PIL import Image, ImageDraw, ImageFont
 
 
 def get_stable_diff_output(WEIGHTS_DIR, prompt, strip):
@@ -31,7 +31,7 @@ def get_stable_diff_output(WEIGHTS_DIR, prompt, strip):
    g_cuda = None
    prompt = prompt #"partyxyz girl playing a guitar in a concert" #@param {type:"string"}
    negative_prompt = "" #@param {type:"string"}
-   num_samples = 4 #@param {type:"number"}
+   num_samples = 2 #@param {type:"number"}
    guidance_scale = 8 #@param {type:"number"}
    num_inference_steps = 50 #@param {type:"number"}
    height = 512 #@param {type:"number"}
@@ -56,7 +56,47 @@ def get_stable_diff_output(WEIGHTS_DIR, prompt, strip):
 
 def separate_string(input_string):
     return [word.strip() for word in input_string.split(".") if word.strip()]
+   
+   
 
+def add_text_to_image(image_path, sentence):
+    # Load image
+    image = Image.open(image_path)
+
+    # Create a draw object
+    draw = ImageDraw.Draw(image)
+
+    # Define font and text size
+    font_size = 30
+    font = ImageFont.truetype"/content/arial.ttf", font_size)
+
+    # Get image size
+    width, height = image.size
+
+    # Define box size based on word count
+    words = sentence.split()
+    max_words_per_line = 10
+    num_lines = (len(words) - 1) // max_words_per_line + 1
+    box_width = width
+    box_height = font_size * num_lines * 1.5
+    box_position = (0, height - box_height)
+
+    # Create a white box
+    draw.rectangle(box_position + (width, height), fill="white")
+
+    # Write the text on the box
+    text_position = (box_position[0] + 10, box_position[1] + 10)
+    draw.text(text_position, sentence, font=font, fill="black", align="left",
+              spacing=font_size // 2)
+
+    # Save the modified image
+    modified_image_path = image_path[:-4] + ".jpg"
+    image.save(modified_image_path)
+
+    return modified_image_path
+
+   
+   
 def get_storyIdeas():
     text = "Give a list of 5 story plot ideas."
     api = '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' #'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'
@@ -305,12 +345,17 @@ def generateComic(story, char_name, char_desc):
     
     sd_desc = get_description(lines, char_name, char_desc)
     strip = 0
-    return redirect(url_for("temp_page", desc1=sd_desc[0].replace(char_name, token_prompt), desc2=sd_desc[1].replace(char_name, token_prompt), desc3=sd_desc[2].replace(char_name, token_prompt), line1=lines[0], line2=lines[1], line3=lines[2]))
+ #   return redirect(url_for("temp_page", desc1=sd_desc[0].replace(char_name, token_prompt), desc2=sd_desc[1].replace(char_name, token_prompt), desc3=sd_desc[2].replace(char_name, token_prompt), line1=lines[0], line2=lines[1], line3=lines[2]))
     for desc in sd_desc:
-       print("desc: " + desc.replace(char_name, token_prompt) + "\n\n")
-#       get_stable_diff_output("/Users/yvielcastillejos/Thesis_web/800", desc.replace(char_name, token_prompt), strip)
+       print("desc: " + desc.replace(char_name, token_prompt) + "\n\n")#  
        strip += 1
-    add_bubble("sd_images/1.png", gpt3_output[0][1], 1)
+       get_stable_diff_output("/Users/yvielcastillejos/Thesis_web/800", desc.replace(char_name, token_prompt), strip)
+
+       files = os.listdir(f"static/strips_{strip}")
+       for img in files:
+           add_text_to_image(os.path.join(f"static/strips_{strip}", img), lines[strip-1])
+       
+    #add_bubble("sd_images/1.png", gpt3_output[0][1], 1)
     return redirect(url_for("generateComicpage", line1=lines[0], line2=lines[1], line3=lines[2]))
     #return render_template("home.html", message1=lines[0], message2=lines[1], message3=lines[2])
 
@@ -322,8 +367,10 @@ def temp_page(desc1, desc2, desc3, line1, line2, line3):
     return render_template("temp.html", desc1=desc1, desc2=desc2, desc3=desc3)
     
   
+  
 @app.route('/comicpage-<line1>-<line2>-<line3>',  methods=['POST', 'GET'])
 def generateComicpage(line1,line2,line3):
+   length_files = len(os.listdir("static/strips_1"))
    counter1 = open("counters/counter1.txt", "r").read().replace("\n", "")
    counter2 = open("counters/counter2.txt", "r").read().replace("\n", "")
    counter3 = open("counters/counter3.txt", "r").read().replace("\n", "")
@@ -333,23 +380,25 @@ def generateComicpage(line1,line2,line3):
    print("img1 ", img1, "\t", "img2 ", img2, "\t", "img3 ", img3, "\t")
    if request.method == "POST":
       if request.form.get('action1') == "Click to get next image for strip 1":
-          counter1 = (int(counter1) + 1)%4
+          counter1 = (int(counter1) + 1)%length_files
           img1 = "/static/strips_1/" + str(counter1) + ".jpg"
           with open('counters/counter1.txt', 'w') as f:
               f.writelines(str(counter1))
       if request.form.get('action2') == "Click to get next image for strip 2": 
-          counter2 = (int(counter2) + 1)%4
+          counter2 = (int(counter2) + 1)%length_files
           img2 = "/static/strips_2/" + str(counter2) + ".jpg"
           with open('counters/counter2.txt', 'w') as f:
               f.writelines(str(counter2))  
     
       if request.form.get('action3') == "Click to get next image for strip 3": 
-          counter3 = (int(counter3) + 1)%4
+          counter3 = (int(counter3) + 1)%length_files
           img3 = "/static/strips_3/" + str(counter3) + ".jpg"
           with open('counters/counter3.txt', 'w') as f:
               f.writelines(str(counter3))
    print("img1 ", img1, "\t", "img2 ", img2, "\t", "img3 ", img3, "\t")
    return render_template("home.html", message1=line1, message2=line2, message3=line3, img1=img1, img2=img2, img3=img3)
+
+
 
 
 
