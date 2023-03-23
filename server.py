@@ -5,7 +5,6 @@ import pandas as pd
 import openai
 import regex
 import re
-app = Flask(__name__, template_folder='templates')
 #app.config[ 'SECRET_KEY' ] = 'mysecret'
 #socketio = SocketIO(app, cors_allowed_origins= "*")
 import cv2
@@ -18,27 +17,30 @@ import torch
 from torch import autocast
 from diffusers import StableDiffusionPipeline, DDIMScheduler
 from IPython.display import display
-from PIL import Image, ImageDraw, ImageFont
+from flask_ngrok import run_with_ngrok
+app = Flask(__name__, template_folder='templates')
+run_with_ngrok(app)   
+import os
 
 
 def get_stable_diff_output(WEIGHTS_DIR, prompt, strip):
-   model_path = "/Users/yvielcastillejos/Thesis_web/800" # If you want to use previously trained model saved in gdrive, replace this with the full path of model in gdrive
+   model_path = "/content/drive/MyDrive/stable_diffusion_weights_dec12/800" # If you want to use previously trained model saved in gdrive, replace this with the full path of model in gdrive
 
    scheduler = DDIMScheduler(beta_start=0.00085, beta_end=0.012, beta_schedule="scaled_linear", clip_sample=False, set_alpha_to_one=False)
-   pipe = StableDiffusionPipeline.from_pretrained(model_path, scheduler=scheduler, safety_checker=None, torch_dtype=torch.bfloat16).to("cpu")
+   pipe = StableDiffusionPipeline.from_pretrained(model_path, scheduler=scheduler, safety_checker=None, torch_dtype=torch.float16).to("cuda")
 
    i = 0
    g_cuda = None
    prompt = prompt #"partyxyz girl playing a guitar in a concert" #@param {type:"string"}
    negative_prompt = "" #@param {type:"string"}
-   num_samples = 2 #@param {type:"number"}
+   num_samples = 1 #@param {type:"number"}
    guidance_scale = 8 #@param {type:"number"}
    num_inference_steps = 50 #@param {type:"number"}
    height = 512 #@param {type:"number"}
    width = 512 #@param {type:"number"}
 
    print("done loading pipe") 
-   with autocast("cpu"), torch.inference_mode():
+   with autocast("cuda"), torch.inference_mode():
        images = pipe(
            prompt,
            height=height,
@@ -56,8 +58,50 @@ def get_stable_diff_output(WEIGHTS_DIR, prompt, strip):
 
 def separate_string(input_string):
     return [word.strip() for word in input_string.split(".") if word.strip()]
-   
-   
+
+def get_storyIdeas():
+    text = "Give a list of 5 story plot ideas."
+    api = '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' #'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'
+    openai.api_key = api #os.getenv(api)
+
+    response = openai.Completion.create(
+      model="text-davinci-003",
+      prompt=text,
+      temperature=0.7,
+      max_tokens=256,
+      top_p=1,
+      frequency_penalty=0,
+      presence_penalty=0
+    )
+
+
+    output = response["choices"][0]["text"]
+    i = separate_string(output)
+    print(i)
+    return i
+
+def get_characterIdeas(story):
+    text = f"Give a list of 5 characters with the format <character name>:<character description>. The character is the main character to the story and the story is about {story}."
+    api = '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' #'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'
+    openai.api_key = api #os.getenv(api)
+
+    response = openai.Completion.create(
+      model="text-davinci-003",
+      prompt=text,
+      temperature=0.7,
+      max_tokens=256,
+      top_p=1,
+      frequency_penalty=0,
+      presence_penalty=0
+    )
+
+
+    output = response["choices"][0]["text"]
+    i = separate_string(output)
+    print(i)
+    return i
+
+from PIL import Image, ImageDraw, ImageFont
 
 def add_text_to_image(image_path, sentence):
     # Load image
@@ -95,59 +139,13 @@ def add_text_to_image(image_path, sentence):
 
     return modified_image_path
 
-   
-   
-def get_storyIdeas():
-    text = "Give a list of 5 story plot ideas."
-    api = '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' #'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'
-    openai.api_key = api #os.getenv(api)
-
-    response = openai.Completion.create(
-      model="text-davinci-003",
-      prompt=text,
-      temperature=0.7,
-      max_tokens=256,
-      top_p=1,
-      frequency_penalty=0,
-      presence_penalty=0
-    )
-
-
-    output = response["choices"][0]["text"]
-    i = separate_string(output)
-    print(i)
-    return i
-
-def get_characterIdeas(story):
-    text = f"Give a list of 5 characters with the format <character name>:<character description>. The character is the main character to the story and the story is about {story}."
-    api = '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' #'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'
-    openai.api_key = api #os.getenv(api)
-
-    response = openai.Completion.create(
-      model="text-davinci-003",
-      prompt=text,
-      temperature=0.7,
-      max_tokens=256,
-      top_p=1,
-      frequency_penalty=0,
-      presence_penalty=0
-    )
-
-
-    output = response["choices"][0]["text"]
-    i = separate_string(output)
-    print(i)
-    return i
-
-
-
 def get_chatgpt(prompt, charname, chardesc):
 
     Character1_name = charname
     Character1_description = chardesc  #"a 10 year old boy who is learning how to ride a bicycle for the first time."
 
     text = f"Generate a story of '{prompt}' with Dialogue. The story SHOULD only contain one character talking to himself/herself and the Dialogue SHOULD only contain 3 lines of dialogue.\n CHARACTERS: {Character1_name}: {Character1_description}\n SCENE:"
-    api = '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' #'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'
+    api = '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' #'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'
     openai.api_key = api #os.getenv(api)
 
     response = openai.Completion.create(
@@ -349,6 +347,8 @@ def generateComic(story, char_name, char_desc):
     for desc in sd_desc:
        print("desc: " + desc.replace(char_name, token_prompt) + "\n\n")#  
        strip += 1
+
+       
        get_stable_diff_output("/Users/yvielcastillejos/Thesis_web/800", desc.replace(char_name, token_prompt), strip)
 
        files = os.listdir(f"static/strips_{strip}")
@@ -366,7 +366,6 @@ def temp_page(desc1, desc2, desc3, line1, line2, line3):
        return redirect(url_for("generateComicpage", line1=line1, line2=line2, line3=line3))
     return render_template("temp.html", desc1=desc1, desc2=desc2, desc3=desc3)
     
-  
   
 @app.route('/comicpage-<line1>-<line2>-<line3>',  methods=['POST', 'GET'])
 def generateComicpage(line1,line2,line3):
@@ -400,8 +399,6 @@ def generateComicpage(line1,line2,line3):
 
 
 
-
-
 if __name__ == '__main__':
   # wraps around the socket io
     # Flask app waits for request respons
@@ -409,5 +406,5 @@ if __name__ == '__main__':
     # adding to the standard server when running app and 
     # have a real time functionality
   #get_stable_diff_output("", "")
-  app.run(debug=True, port=5005, use_reloader=True)
+  app.run()
 #  socketio.run( app, debug = True,use_reloader=False )
