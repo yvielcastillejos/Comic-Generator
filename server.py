@@ -61,7 +61,7 @@ def separate_string(input_string):
 
 def get_storyIdeas():
     text = "Give a list of 5 story plot ideas."
-    api = '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' #'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'
+    api = os.environ.get('API_KEY') #'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'
     openai.api_key = api #os.getenv(api)
 
     response = openai.Completion.create(
@@ -82,7 +82,7 @@ def get_storyIdeas():
 
 def get_characterIdeas(story):
     text = f"Give a list of 5 characters with the format <character name>:<character description>. The character is the main character to the story and the story is about {story}."
-    api = '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' #'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'
+    api = os.environ.get('API_KEY') #'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'
     openai.api_key = api #os.getenv(api)
 
     response = openai.Completion.create(
