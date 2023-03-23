@@ -8,6 +8,8 @@
 |`server.py`| Server for hosting the stable diffusion and gpt models|
 |`counters`| counters for the "next image" function|
 
+## COLAB Use
+To host the server using google colab, please run https://colab.research.google.com/drive/1WkVlG8LyapurDNgKWpBZ28Du5r2xeroz?usp=sharing 
 
 ## Comic Generator using GPT-3 and Stable Diffusion
 
