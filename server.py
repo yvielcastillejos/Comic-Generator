@@ -68,7 +68,7 @@ def add_text_to_image(image_path, sentence):
 
     # Define font and text size
     font_size = 30
-    font = ImageFont.truetype"/content/arial.ttf", font_size)
+    font = ImageFont.truetype("/content/arial.ttf", font_size)
 
     # Get image size
     width, height = image.size
