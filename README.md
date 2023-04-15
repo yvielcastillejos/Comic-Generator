@@ -1,4 +1,5 @@
 # Comic generator
+Blog: https://medium.com/@yvielcastillejos8/comic-generator-using-large-language-models-a-tutorial-13c4e33fad3
 
 ## Repo Description
 | Scripts/Folders | Description|
